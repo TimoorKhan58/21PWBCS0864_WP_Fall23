@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Library Management System</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color:  #53f75b;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        .column {
+            flex: 1;
+            background-color: #90ddf5;
+            padding: 20px;
+            
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .titl {
+            text-align: center;
+            color: white;
+            background-color: black;
+        }
+        .book-list {
+            
+            order: 1;
+        }
+        .add-book, .search-books {
+            flex: 1;
+            order: 3;
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media only screen (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .column {
+                flex: 1;
+                margin: 10px 0;
+                order: 2;
+            }
+            .book-list, .add-book, .search-books {
+                flex: 1;
+                order: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="titl">Online Library Management System</h1>
+    <div class="container">
+        <div class="column book-list">
+            <h2>Book List</h2>
+            <ol>
+                <li>greatgatsby: by F. Scott Fitzgerald (Literary Fiction) ISBN:2357614</li>
+
+                <li>hobbit: by J.R.R. Tolkien (Adventure) ISBN: 8654874</li>
+                <li>wind: by Margaret Mitchell (Historical Fiction) ISBN:8765537</li>
+            </ol>
+        </div>
+        <div class="column add-book">
+            <h2>Add New Book</h2>
+            <form>
+            <input type="text" id="book-title" placeholder="Title">
+            <input type="text" id="book-author" placeholder="Author">
+            <input type="number" id="ISBN" placeholder="ISBN">
+            <button onclick="addBook()">Add Book</button>
+        </form>
+            
+        </div>
+        <div class="column search-books">
+            <h2>Search Books</h2>
+            <input type="text" id="search-input" placeholder="Search">
+            <button onclick="searchBooks()">Search</button>
+            <div id="search-results"></div>
+        </div>
+    </div>
+
+    <script>
+        const books = [];
+
+        function addBook() {
+            const title = document.getElementById("book-title").value;
+            const author = document.getElementById("book-author").value;
+            
+
+            if (title && author) {
+                const isDuplicate = books.some(book => book.title === title && book.author === author);
+
+                if (!isDuplicate) {
+                    const newBook = { title, author };
+                    books.push(newBook);
+                    updateBookList();
+                    document.getElementById("book-title").value = "";
+                    document.getElementById("book-author").value = "";
+                } else {
+                    alert("Duplicate book entry!");
+                }
+            }
+        }
+
+        function searchBooks() {
+            const searchInput = document.getElementById("search-input").value.toLowerCase();
+            const searchResults = books.filter(book =>
+                book.title.toLowerCase().includes(searchInput) || book.author.toLowerCase().includes(searchInput)
+            );
+
+            const searchResultsDiv = document.getElementById("search-results");
+            searchResultsDiv.innerHTML = "";
+
+            if (searchResults.length === 0) {
+                searchResultsDiv.innerHTML = "No matching books found.";
+            } else {
+                searchResults.forEach(book => {
+                    const resultDiv = document.createElement("div");
+                    resultDiv.textContent = `${book.title} by ${book.author}`;
+                    searchResultsDiv.appendChild(resultDiv);
+                });
+            }
+        }
+
+        function updateBookList() {
+            const bookList = document.getElementById("book-list");
+            bookList.innerHTML = "";
+
+            if (books.length === 0) {
+                bookList.textContent = "No books in the library.";
+            } else {
+                books.forEach((book, index) => {
+                    const bookItem = document.createElement("li");
+                    bookItem.textContent = `${index + 1}. ${book.title} by ${book.author}`;
+                    bookList.appendChild(bookItem);
+                });
+            }
+        }
+
+        updateBookList();
+    </script>
+</body>
+</html>
